@@ -1,7 +1,3 @@
-from ast import Delete
-import io
-from math import prod
-from django.http import HttpResponse, HttpResponseBadRequest
 from product.models.product import Product
 from product.serializers.productSerializer import ProductSerializer
 from django.views.decorators.csrf import csrf_exempt
@@ -10,12 +6,12 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 
 class GetProductView(APIView):
-    authentication_classes = [SessionAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
     def get(self, request):
         product = Product.objects.all()
         serializer =  ProductSerializer(product, many = True)
@@ -37,7 +33,7 @@ def view_product_view(request, pk):
 
 # @api_view(['POST'])
 class AddNewProduct(APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def  post(self, request, format= None):
         serializer =  ProductSerializer(data = request.data)
@@ -66,7 +62,7 @@ class AddNewProduct(APIView):
 
 
 class UpdateDeleteProduct(APIView):
-    authentication_classes = [SessionAuthentication]
+    authentication_classes = [JWTAuthentication]
     permission_classes = [IsAuthenticated]
     def put(self, request, format=None):
         id = request.data.get('id')
@@ -86,7 +82,11 @@ class UpdateDeleteProduct(APIView):
         try:
             product_instance = Product.objects.get(id=id)
         except Exception as e:
-            res = {'msg': f'{e}'}
+            res = {'error': f'{e}'}
             return Response(res, status= status.HTTP_404_NOT_FOUND)
-        product_instance.delete()
-        return Response({'msg': f'Product {product_instance.name} has been deleted successfully!!'})
+        try:
+            product_instance.delete()
+            return Response({'msg': f'Product {product_instance.name} has been deleted successfully!!'})
+        except Exception as e:
+            res = {'error': f'{e}'}
+            return Response(res, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
