@@ -33,8 +33,35 @@ class GetCategory(APIView):
         return Response(serializer.data, status= status.HTTP_200_OK)
 
 class UpdateDeleteCategory(APIView):
-    pass
-
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminCanAdd]
+    def put(self, request, format=None):
+        id = request.data.get('id')
+        try:
+            category_instance = Category.objects.get(id=id)
+            print(category_instance)
+        except Exception as e:
+            res = {'msg': f'{e}'}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        serializer = CategorySerializer(category_instance, data= request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"msg": 'Category has been updated sucessfully!!'})
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request):
+        id =  request.data.get('id')
+        try:
+            category_instance =  Category.objects.get(id=id)
+        except Exception as e:
+            res = {'msg': f'{e}'}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        try:
+            category_instance.delete()
+            return Response({'msg': f'{category_instance.name} has been deleted successfully!!'})
+        except Exception as e:
+            res = {'error': f'{e}'}
+            return Response(res, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class AddNewSubCategory(APIView):
     authentication_classes = [JWTAuthentication]
@@ -56,3 +83,35 @@ class GetSubCategory(APIView):
         items = SubCategory.objects.all()
         serializer = SubCategorySerializer(items, many=True)
         return Response(serializer.data, status= status.HTTP_200_OK)
+
+
+class UpdateDeleteSubCategory(APIView):
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminCanAdd]
+    def put(self, request, format=None):
+        id = request.data.get('id')
+        try:
+            sub_category_instance = SubCategory.objects.get(id=id)
+            print(sub_category_instance)
+        except Exception as e:
+            res = {'msg': f'{e}'}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        serializer = SubCategorySerializer(sub_category_instance, data= request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"msg": 'Sub Category has been updated sucessfully!!'})
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+        
+    def delete(self, request):
+        id =  request.data.get('id')
+        try:
+            sub_category_instance =  SubCategory.objects.get(id=id)
+        except Exception as e:
+            res = {'msg': f'{e}'}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        try:
+            sub_category_instance.delete()
+            return Response({'msg': f'{sub_category_instance.name} has been deleted successfully!!'})
+        except Exception as e:
+            res = {'error': f'{e}'}
+            return Response(res, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
