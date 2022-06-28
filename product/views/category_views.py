@@ -1,5 +1,4 @@
-from urllib import response
-from product import serializers
+
 from product.custompermissions import AdminCanAdd
 from product.models.category import Category, SubCategory
 from product.serializers.CategorySerializer import CategorySerializer, SubCategorySerializer

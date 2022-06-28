@@ -1,6 +1,6 @@
 from django.urls import  path
 from product.views import views
-from product.views import category_views
+from product.views import category_views, product_inventory_view
 
 urlpatterns = [
    path('get-product/', views.GetProductView.as_view(), name='getProduct'),
@@ -15,4 +15,10 @@ urlpatterns = [
    path('add-sub-category/', category_views.AddNewSubCategory.as_view(), name='addSubCategory'),
    path('get-sub-category/', category_views.GetSubCategory.as_view(), name='getSubCategory'),
    path('updel-sub-category/', category_views.UpdateDeleteSubCategory.as_view(), name='updateDeleteSubCategory'),
+
+   path('add-product-inventory/', product_inventory_view.AddNewProductInventory.as_view(), name='addNewProductInventory'),
+   path('get-product-inventory/', product_inventory_view.GetProductInventory.as_view(), name='getNewProductInventory'),
+   path('updel-product-inventory/', product_inventory_view.UpdateDeleteProductInventory.as_view(), name='updateDeleteProductInventory'),
+
+
 ]
