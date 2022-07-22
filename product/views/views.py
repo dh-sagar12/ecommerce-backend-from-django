@@ -29,7 +29,7 @@ def view_product_view(request, pk):
         serializer =  ProductSerializer(product)
         return Response(serializer.data)
     else:
-        return Response({'msg':'request method not allowed'}, status= status.HTTP_400_BAD_REQUESTs)
+        return Response({'msg':'request method not allowed'}, status= status.HTTP_400_BAD_REQUEST)
 
 # @api_view(['POST'])
 class AddNewProduct(APIView):
@@ -38,7 +38,11 @@ class AddNewProduct(APIView):
     def  post(self, request, format= None):
         serializer =  ProductSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save()
+        try:
+            serializer.save()
+        except Exception as e:
+            res = {'msg': f'{e}'}
+            return Response(res, status=status.HTTP_400_BAD_REQUEST)
         res = {'msg': 'Data Saved successfully!!'}
         return Response(res)
 

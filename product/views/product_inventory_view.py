@@ -1,9 +1,5 @@
-from urllib import response
-from product import serializers
 from product.custompermissions import AdminCanAdd
-from product.models.category import Category, SubCategory
 from product.models.productInventory import ProductInventory
-from product.serializers.CategorySerializer import CategorySerializer, SubCategorySerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status

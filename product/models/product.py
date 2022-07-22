@@ -2,6 +2,7 @@ from pyexpat import model
 from uuid import uuid4
 from django.db import models
 from django.template.defaultfilters import slugify
+from product.models.brands import Brands
 
 from product.models.category import Category, SubCategory
 
@@ -15,6 +16,7 @@ class Product(models.Model):
     description =  models.TextField(max_length=1000, db_column='description')
     category_id = models.ForeignKey(Category, db_column='category_id', to_field='id', on_delete=models.DO_NOTHING)
     sub_category_id = models.ForeignKey(SubCategory, db_column='sub_category_id', to_field='id', on_delete=models.DO_NOTHING)
+    brand_id = models.ForeignKey(Brands, on_delete=models.DO_NOTHING, to_field='id', db_column= 'brand_id')
     is_active = models.BooleanField(default=True, db_column='is_active')
     created_on = models.DateTimeField(auto_now_add=True, db_column='created_on') 
     updated_on = models.DateTimeField(auto_now=True, db_column='updated_on') 

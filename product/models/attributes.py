@@ -27,14 +27,14 @@ class CategoryAttribute(models.Model):
         db_table ='product"."category_attributes'
 
 
-    
+
 class ProductAttributeValues(models.Model):
     id  = models.AutoField(primary_key=True, db_column='id')
     product_inv_id = models.ForeignKey(ProductInventory, on_delete=models.DO_NOTHING, to_field='id', db_column='product_inv_id')
 
     attribute_id = models.ForeignKey(Attribute, on_delete=models.DO_NOTHING, to_field='id', db_column='attribute_id')
 
-    attribute_value =  models.CharField(max_length=30, null=False, blank=False, db_column='attribute_id')
+    attribute_value =  models.CharField(max_length=30, null=False, blank=False, db_column='attribute_value')
 
     class Meta:
         db_table ='product"."product_attribute_values'
