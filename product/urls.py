@@ -1,6 +1,6 @@
 from django.urls import  path
 from product.views import attribute_views, views
-from product.views import category_views, product_inventory_view
+from product.views import category_views, product_inventory_view, images_views
 
 urlpatterns = [
    path('get-product/', views.GetProductView.as_view(), name='getProduct'),
@@ -33,5 +33,7 @@ urlpatterns = [
    path('product-attribute/', attribute_views.ProductAttributeValueView.as_view(), name='productAttributeValue'),
    path('get-product-attribute/', attribute_views.GetProductAttributeValueView.as_view(), name='getProductAttributeValue'),
 
+
+   path('upload-image/', images_views.AddImages.as_view(), name  =  'addImage' )
 
 ]

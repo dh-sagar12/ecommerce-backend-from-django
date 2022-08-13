@@ -1,29 +1,41 @@
+from email.mime import image
 from product.custompermissions import AdminCanAdd
+from product.models.Images import Images
 from product.models.productInventory import ProductInventory
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
+from django.db import transaction
 
 from product.serializers.ProductInventorySerializer import ProductInventorySerializer
+from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
 
 
 
 class AddNewProductInventory(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminCanAdd]
-    def post(self, request, format= None):
-        serializer =  ProductInventorySerializer(data = request.data)
-        serializer.is_valid(raise_exception=True)
-        try:
-            serializer.save()
-            res = {'msg': 'Data Saved successfully!!'}
-            return Response(res)
-        except Exception as e:
-            res =  {'error': f'{e}'}
-            return Response(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, AdminCanAdd]
+    parser_classes = [MultiPartParser, FormParser, JSONParser ]
 
+    def post(self, request, format= None):
+        print(request.data)
+        serializer =  ProductInventorySerializer(data = request.data)
+        if serializer.is_valid():
+            try:
+                serializer.save()
+                res = {'status': status.HTTP_200_OK,  'success': 'Data Saved successfully!!'}
+                return Response(res)
+            except Exception as e:
+                res =  {'error': f'{e}'}
+                return Response(res, status=status.HTTP_406_NOT_ACCEPTABLE)
+        else:
+            res = {
+                'status': status.HTTP_400_BAD_REQUEST,
+                'errors': serializer.errors
+            }
+            return Response(res, status= status.HTTP_400_BAD_REQUEST)
 
 class GetProductInventory(APIView):
     def get(self, request):

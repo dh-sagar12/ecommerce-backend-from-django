@@ -30,7 +30,7 @@ class CategoryAttribute(models.Model):
 
 class ProductAttributeValues(models.Model):
     id  = models.AutoField(primary_key=True, db_column='id')
-    product_inv_id = models.ForeignKey(ProductInventory, on_delete=models.DO_NOTHING, to_field='id', db_column='product_inv_id')
+    product_inv_id = models.ForeignKey(ProductInventory, on_delete=models.DO_NOTHING, to_field='id', db_column='product_inv_id', related_name='attributes')
 
     attribute_id = models.ForeignKey(Attribute, on_delete=models.DO_NOTHING, to_field='id', db_column='attribute_id')
 

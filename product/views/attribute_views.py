@@ -40,7 +40,7 @@ class AttributeView(APIView):
 
 class GetAttributeView(APIView):
     def get(self, request):
-        items = Attribute.objects.all()
+        items = Attribute.objects.filter(is_active =  True)
         serializer = AttributeSerializer(items, many=True)
         return Response(serializer.data, status= status.HTTP_200_OK)
 
