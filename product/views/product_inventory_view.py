@@ -37,6 +37,8 @@ class AddNewProductInventory(APIView):
             }
             return Response(res, status= status.HTTP_400_BAD_REQUEST)
 
+
+
 class GetProductInventory(APIView):
     def get(self, request):
         items = ProductInventory.objects.all()

@@ -8,7 +8,7 @@ from product.models.product import Product
 class ProductInventory(models.Model):
     id = models.AutoField(primary_key=True, db_column='id')
     sku = models.CharField(max_length=12, db_column='sku', unique=True)
-    product_id = models.ForeignKey(Product, on_delete=models.DO_NOTHING, to_field='id', db_column= 'product_id')
+    product_id = models.ForeignKey(Product, on_delete=models.DO_NOTHING, to_field='id', db_column= 'product_id', related_name='product_items')
     is_active =  models.BooleanField(default=True, db_column='is_active', null=False)
     is_default =  models.BooleanField(default=False, db_column='is_default', null=False)
     store_price =  models.BigIntegerField(null=False, blank=False, db_column='store_price')

@@ -34,7 +34,7 @@ class SubCategory(models.Model):
     id =  models.AutoField(primary_key=True, db_column='id')
     sub_category_name = models.CharField(max_length=50, null=False, blank=False, db_column='sub_category_name')
     slug =  models.SlugField(db_column='slug',  unique=True)
-    category_id =  models.ForeignKey(Category, to_field='id',on_delete=models.DO_NOTHING, db_column='category_id')
+    category_id =  models.ForeignKey(Category, to_field='id',on_delete=models.DO_NOTHING, db_column='category_id', related_name='sub_categories')
     is_active = models.BooleanField(default=True, db_column='is_active')
     created_on = models.DateTimeField(auto_now_add=True, db_column='created_on')
 

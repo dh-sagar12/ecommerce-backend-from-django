@@ -4,6 +4,8 @@ from rest_framework import serializers
 from product.models.attributes import Attribute, CategoryAttribute, ProductAttributeValues
 
 
+
+# serialzer used to do operation on attribute name like (size, Height, Width etc )
 class AttributeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Attribute
@@ -11,6 +13,8 @@ class AttributeSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
+
+# used to mapp serialzer name with sub cateogry id so that if one sub category choosed then only atttribute of that cateogry to be fetched in front end 
 class CategoryAttributeSerializer(serializers.ModelSerializer):
 
     class Meta:
@@ -19,7 +23,7 @@ class CategoryAttributeSerializer(serializers.ModelSerializer):
         read_only_fields = ['id']
 
 
-
+# serialzer use to save atttribute and theier value to the table accorridnly 
 class ProductAttributeValueSerializer(serializers.ModelSerializer):
 
     class Meta:

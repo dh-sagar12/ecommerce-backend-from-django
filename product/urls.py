@@ -1,11 +1,16 @@
+
 from django.urls import  path
 from product.views import attribute_views, views
 from product.views import category_views, product_inventory_view, images_views
 
 urlpatterns = [
-   path('get-product/', views.GetProductView.as_view(), name='getProduct'),
-   path('get-product/<int:pk>', views.view_product_view, name='viewProduct'),
+   path('get-product/', views.GetOnlyProductView.as_view(), name = 'getOnlyProduct' ),
+   path('get-product/<int:pk>', views.GetOneSingleProductView.as_view(), name = 'getOneSingleProductView' ),
+   path('get-full-product/', views.GetFullProductView.as_view(), name='getFullProduct'),
+   path('get-full-product/<int:pk>', views.view_product_view, name='viewProduct'),
    path('add-product/', views.AddNewProduct.as_view(), name='addProduct'),
+   path('add-full-product/', views.AddFullProduct.as_view(), name='addFullProduct'),
+
    path('update-product/', views.UpdateDeleteProduct.as_view(), name='updateProduct'),
 
    path('add-category/', category_views.AddNewCategory.as_view(), name='addCategory'),
@@ -34,6 +39,8 @@ urlpatterns = [
    path('get-product-attribute/', attribute_views.GetProductAttributeValueView.as_view(), name='getProductAttributeValue'),
 
 
-   path('upload-image/', images_views.AddImages.as_view(), name  =  'addImage' )
+   path('upload-image/', images_views.AddImages.as_view(), name  =  'addImage' ),
+
+   path('get-brands/', views.GetBrandsView.as_view(), name= 'GetBrands')
 
 ]
