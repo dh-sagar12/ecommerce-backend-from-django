@@ -85,8 +85,8 @@ class GetCategoryAttributeView(APIView):
 
     
 class ProductAttributeValueView(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminCanAdd]
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, AdminCanAdd]
     def  post(self, request, format= None):
         serializer =  ProductAttributeValueSerializer(data = request.data)
         serializer.is_valid(raise_exception=True)
@@ -111,6 +111,21 @@ class ProductAttributeValueView(APIView):
             serializer.save()
             return Response({"msg": 'Attribute value has been updated sucessfully!!'})
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request):
+        id =  request.data.get('id')
+        try:
+            product_att_val_instance =  ProductAttributeValues.objects.get(id=id)
+        except Exception as e:
+            res = {'error': f'{e}', 'status': status.HTTP_404_NOT_FOUND }
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        try:
+            product_att_val_instance.delete()
+            return Response({'msg': f'Attribute has been deleted successfully!!', 'status': status.HTTP_200_OK})
+        except Exception as e:
+            res = {'error': f'{e}'}
+            return Response(res, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
+
 
 
     

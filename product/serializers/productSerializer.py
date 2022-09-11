@@ -15,6 +15,7 @@ from product.models.product import Product
 
 # to create only a product not items and inventory(it is futher using in FullProductWithInventorySerializer
 # serializer to create full product including all its attributes and images
+# post method only 
 class ProductSerializer(serializers.ModelSerializer):
     product_items =  ProductInventorySerializer(read_only = True, many= True)
     class Meta:
@@ -25,7 +26,9 @@ class ProductSerializer(serializers.ModelSerializer):
 
 
 # to view all the product with items, image atrribute and all 
+# get method only 
 class ProductSerializerForGetMethod(ProductSerializer):
+    
     class Meta(ProductSerializer.Meta):
         model = Product
         fields =  ProductSerializer.Meta.fields
@@ -36,6 +39,7 @@ class ProductSerializerForGetMethod(ProductSerializer):
     
 
 # to view only one product and images not product item and their atrribute 
+# product with image (primiliary get post stil not required so let's postpond it forsome time )
 class ProductOnlySerializer(serializers.ModelSerializer):
     image =  ImageSerializer(read_only=True, many=True)
     class Meta:

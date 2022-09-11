@@ -3,6 +3,8 @@ import base64
 from dataclasses import fields
 import json
 from pyexpat import model
+from this import d
+from tkinter import Image
 from rest_framework import serializers
 from product.models.Images import Images
 from ..models.product import Product
@@ -29,8 +31,9 @@ class SingleProductItemSerializer(serializers.ModelSerializer):
 
 
 # serializers to be used to create product items including images and attribute but not create product itself. it is basicaly used to add items inside a product 
+# for post method only 
 class ProductInventorySerializer(serializers.ModelSerializer):
-    images  =  ImageSerializer(many=True, read_only=  True)
+    images  =  ImageSerializer( many=True, read_only=  True)
     attributes =  ProductAttributeValueSerializer(many=  True, read_only =  True)
     
     uploaded_images = serializers.ListField(
@@ -42,6 +45,7 @@ class ProductInventorySerializer(serializers.ModelSerializer):
         child =  serializers.JSONField(),
         write_only =  True, 
     )
+    
     
     class Meta:
         model = ProductInventory
@@ -67,34 +71,12 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 
 
 
-# class FullProductWithInventorySerializer(ProductInventorySerializer):
-#     product  =  serializers.JSONField()
 
-#     class Meta(ProductInventorySerializer.Meta):
-#         fields = ProductInventorySerializer.Meta.fields + ['product']
-#         fields.remove('product_id')
+class ProductInventorySerializerForGetMethod(ProductInventorySerializer):
+    images  =  ImageSerializer(source= 'image_list', many=True, read_only=  True)
 
-
-#     @transaction.atomic
-#     def create(self, validated_data):
-#         uploaded_images = validated_data.pop('uploaded_images')
-#         attributes_value =  validated_data.pop('attributes_value')
-#         product_data =  validated_data.pop('product')
-#         print('product_data: ', product_data, type(product_data))
-#         # productInstance =  Product.objects.create
-#         # productInstance  =  ProductSerializer(data = product_data)
-#         productInstance.is_valid(raise_exception=True)
-#         product_return = productInstance.save()
-#         new_product_inventory = ProductInventory.objects.create(product_id  = product_return, **validated_data)
-#         for uploaded_item in uploaded_images:
-#             new_product_image = Images.objects.create(product_inventory_id = new_product_inventory, file_name = uploaded_item)
-        
-#         for attr_value in attributes_value:
-#             dict_attribute = json.loads(attr_value)
-#             dict_attribute.update({"product_inv_id": new_product_inventory.id})
-#             serializer = ProductAttributeValueSerializer(data = dict_attribute)
-#             serializer.is_valid(raise_exception=True)
-#             serializer.save()
-#         return new_product_inventory
-
-       
+    class Meta(ProductInventorySerializer.Meta):
+        model =  ProductInventorySerializer.Meta.model
+        fields = ProductInventorySerializer.Meta.fields
+        read_only_fields =  ProductInventorySerializer.Meta.read_only_fields
+        depth = 1

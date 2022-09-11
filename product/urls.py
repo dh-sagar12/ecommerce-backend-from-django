@@ -23,6 +23,8 @@ urlpatterns = [
 
    path('add-product-inventory/', product_inventory_view.AddNewProductInventory.as_view(), name='addNewProductInventory'),
    path('get-product-inventory/', product_inventory_view.GetProductInventory.as_view(), name='getNewProductInventory'),
+   path('get-product-inventory/<int:pk>', product_inventory_view.view_product_items_view, name='ViewSingleProductItem'),
+
    path('updel-product-inventory/', product_inventory_view.UpdateDeleteProductInventory.as_view(), name='updateDeleteProductInventory'),
 
 

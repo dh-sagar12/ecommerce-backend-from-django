@@ -13,6 +13,7 @@ class Images(models.Model):
     product_id = models.ForeignKey(Product, on_delete=models.DO_NOTHING, db_column='product_id', related_name='image', null=True)
     file_name = models.ImageField(upload_to = upload_to)
     created_on = models.DateTimeField(auto_now_add= True, db_column='created_on')
+    is_active =  models.BooleanField(default=True, db_column='is_active')
 
     def __str__(self):
         return str(self.file_name)

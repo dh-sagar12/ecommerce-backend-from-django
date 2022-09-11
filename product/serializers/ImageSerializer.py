@@ -7,8 +7,9 @@ from product.models.Images import Images
 class ImageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Images
-        fields = ['id', 'product_inventory_id', 'product_id', 'file_name', 'created_on']
-        read_only_fields = ['id', 'created_on']
+        fields = ['id', 'product_inventory_id', 'product_id', 'file_name', 'created_on', 'is_active']
+        read_only_fields = ['id', 'created_on', 'is_active']
+
 
 
     

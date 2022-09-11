@@ -17,7 +17,7 @@ class GetFullProductView(APIView):
     # authentication_classes = [JWTAuthentication]
     # permission_classes = [IsAuthenticated]
     def get(self, request):
-        product = Product.objects.all()
+        product = Product.objects.all().order_by('id')
         serializer =  ProductSerializerForGetMethod(product,  many = True )
         return Response(serializer.data)
 
@@ -32,6 +32,7 @@ class GetOnlyProductView(APIView):
         return Response(serializer.data)
         
 
+# get only product not their dependencies data 
 class GetOneSingleProductView(APIView):
     def get(self, request, pk):
         try:
