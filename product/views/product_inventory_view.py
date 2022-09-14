@@ -1,4 +1,6 @@
 from email.mime import image
+from functools import partial
+import json
 from product.custompermissions import AdminCanAdd
 from product.models.Images import Images
 from product.models.productInventory import ProductInventory
@@ -69,17 +71,15 @@ def view_product_items_view(request, pk):
 
 
 class UpdateDeleteProductInventory(APIView):
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated, AdminCanAdd]
-    def put(self, request, format=None):
-        id = request.data.get('id')
-        try:
-            product_inv_instance = ProductInventory.objects.get(id=id)
-        except Exception as e:
-            res = {'msg': f'{e}'}
-            return Response(res, status=status.HTTP_404_NOT_FOUND)
-        serializer = ProductInventorySerializer(product_inv_instance, data= request.data, partial= True)
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated, AdminCanAdd]
+    def put(self, request):
+        product_item = request.data.get('product_item')
+        product_item_load = json.loads(product_item)
+        # product_id =  product_item_load['id']
+        # product_inventory_instance =  ProductInventory.objects.get(id= product_id)
+        serializer = ProductInventorySerializer(product_item_load, data= request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"msg": 'Product Inventory has been updated sucessfully!!'})
+            return Response({"status": status.HTTP_200_OK, "msg": 'Product Inventory has been updated sucessfully!!'})
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
