@@ -81,6 +81,8 @@ class AddNewProduct(APIView):
 
 # view to add full product including images and items and attribute(a complete product)
 class AddFullProduct(APIView):
+    # authentication_classes = [JWTAuthentication]
+    # permission_classes = [IsAuthenticated]
     def post(self, request, format = None):
         serializer = FullProductWithInventorySerializer(data= request.data)
         if serializer.is_valid():
@@ -110,12 +112,12 @@ class UpdateDeleteProduct(APIView):
         try:
             product_instance = Product.objects.get(id=id)
         except Exception as e:
-            res = {'msg': f'{e}'}
+            res = {'status': status.HTTP_404_NOT_FOUND, 'msg': f'{e}'}
             return Response(res, status=status.HTTP_404_NOT_FOUND)
         serializer = ProductSerializer(product_instance, data= request.data, partial= True)
         if serializer.is_valid():
             serializer.save()
-            return Response({"msg": 'Product has been updated sucessfully!!'})
+            return Response({"status": status.HTTP_200_OK,  "msg": 'Product has been updated sucessfully!!'})
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request):

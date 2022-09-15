@@ -22,12 +22,6 @@ class SingleProductItemSerializer(serializers.ModelSerializer):
 
 
 
-class OnlyProductInventorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model =  ProductInventory
-        fields = ['id', 'sku', 'product_id',  'is_active', 'is_default', 'store_price', 'discount', 'retail_price', 'created_on', 'updated_on'  ]    
-        read_only_fields = ['id', 'sku', 'created_on', 'updated_on' ]
-
 
 # serializers to be used to create product items including images and attribute but not create product itself. it is basicaly used to add items inside a product 
 # for post method only 
@@ -60,7 +54,7 @@ class ProductInventorySerializer(serializers.ModelSerializer):
         attributes_value =  validated_data.pop('attributes_value')
         new_product_inventory = ProductInventory.objects.create(**validated_data)
         for uploaded_item in uploaded_images:
-            new_product_image = Images.objects.create(product_inventory_id = new_product_inventory, file_name = uploaded_item)
+            new_product_image = Images.objects.create(product_inventory_id = new_product_inventory, file_name = uploaded_item, product_id= new_product_inventory.product_id)
         
         for attr_value in attributes_value:
             dict_attribute = json.loads(attr_value)
@@ -73,17 +67,11 @@ class ProductInventorySerializer(serializers.ModelSerializer):
 
     @transaction.atomic
     def update(self, instance, validated_data):
-        print('instance', instance)
-        print('validated_data', validated_data)
         uploaded_images   =  validated_data.get('uploaded_images')
-        print('uploaded_images', uploaded_images)
         attributes_value =  validated_data.get('attributes_value')
-        print('attributes_value', attributes_value)
-        print('instance_get', instance.get('id'))
         product_item_instance  =  ProductInventory.objects.get(id= instance.get('id'))
         product_instance  = Product.objects.get(id=instance.get('product_id') )
-        print('product_item_in', product_item_instance)
-        serializer =  OnlyProductInventorySerializer(product_item_instance, data=instance, partial=True)
+        serializer =  SingleProductItemSerializer(product_item_instance, data=instance, partial=True)
         serializer.is_valid(raise_exception=True)
         serializer.save()
         if uploaded_images is not None:
