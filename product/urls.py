@@ -5,11 +5,13 @@ from product.views import category_views, product_inventory_view, images_views
 
 urlpatterns = [
    path('get-product/', views.GetOnlyProductView.as_view(), name = 'getOnlyProduct' ),
+   path('product-search/', views.product_search,  name = 'productSearch' ),
    path('get-product/<int:pk>', views.GetOneSingleProductView.as_view(), name = 'getOneSingleProductView' ),
    path('get-full-product/', views.GetFullProductView.as_view(), name='getFullProduct'),
    path('get-full-product/<int:pk>', views.view_product_view, name='viewProduct'),
    path('add-product/', views.AddNewProduct.as_view(), name='addProduct'),
    path('add-full-product/', views.AddFullProduct.as_view(), name='addFullProduct'),
+
 
    path('update-product/', views.UpdateDeleteProduct.as_view(), name='updateProduct'),
 

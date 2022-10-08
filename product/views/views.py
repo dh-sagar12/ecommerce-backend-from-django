@@ -1,5 +1,5 @@
-# from ..serializers.ProductInventorySerializer import FullProductWithInventorySerializer
-from tkinter import EXCEPTION
+from django.db import connection
+from django.http import JsonResponse
 from ..models.brands import Brands
 from product.models.product import Product
 from product.serializers.productSerializer import BrandSerializer, FullProductWithInventorySerializer, ProductSerializerForGetMethod, ProductOnlySerializer, ProductSerializer
@@ -42,8 +42,6 @@ class GetOneSingleProductView(APIView):
             return Response(res)
         serializer =  ProductOnlySerializer(product)
         return Response(serializer.data)
-
-
 
 
 # view to view one product by passing pk in URl including (product image, atrribute and all the dependencies table )
@@ -142,3 +140,21 @@ class GetBrandsView(APIView):
         brands = Brands.objects.all()
         serializer =  BrandSerializer(brands, many = True)
         return Response(serializer.data)
+
+
+    
+
+
+def product_search(request):
+    if request.method == 'GET':
+        product_id = request.GET.get('product_id') or 0
+        product_name = request.GET.get('product_name')
+        print({'product_id': product_id})
+        print({'product_name': product_name})
+        cursor  = connection.cursor()
+        cursor.callproc('product.product_search', [product_id, product_name ])
+        result =  [dict(zip([column[0] for column in cursor.description], row))
+                for row in cursor.fetchall()]
+        return JsonResponse(result, safe=False)
+
+
