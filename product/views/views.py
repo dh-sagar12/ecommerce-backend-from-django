@@ -3,7 +3,6 @@ from django.http import JsonResponse
 from ..models.brands import Brands
 from product.models.product import Product
 from product.serializers.productSerializer import BrandSerializer, FullProductWithInventorySerializer, ProductSerializerForGetMethod, ProductOnlySerializer, ProductSerializer
-from django.views.decorators.csrf import csrf_exempt
 from rest_framework.decorators import api_view
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -53,8 +52,8 @@ def view_product_view(request, pk):
         except Exception as e:
             res = {'error': f'{e}'}
             return Response(res)
-        serializer =  ProductSerializer(product)
-        return Response(serializer.data)
+        serializer =  ProductSerializerForGetMethod(product)
+        return Response({'status': status.HTTP_200_OK, 'product': serializer.data})
     else:
         return Response({'msg':'request method not allowed'}, status= status.HTTP_400_BAD_REQUEST)
 
@@ -149,8 +148,6 @@ def product_search(request):
     if request.method == 'GET':
         product_id = request.GET.get('product_id') or 0
         product_name = request.GET.get('product_name')
-        print({'product_id': product_id})
-        print({'product_name': product_name})
         cursor  = connection.cursor()
         cursor.callproc('product.product_search', [product_id, product_name ])
         result =  [dict(zip([column[0] for column in cursor.description], row))

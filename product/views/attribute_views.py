@@ -7,7 +7,8 @@ from rest_framework import status
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from product.models.attributes import Attribute, CategoryAttribute, ProductAttributeValues
-
+from django.db import connection
+from django.http import JsonResponse
 
 
 class AttributeView(APIView):
@@ -134,3 +135,17 @@ class GetProductAttributeValueView(APIView):
         items = ProductAttributeValues.objects.all()
         serializer = ProductAttributeValueSerializer(items, many=True)
         return Response(serializer.data, status= status.HTTP_200_OK)
+
+
+
+
+def get_attribute_value_with_item_id(request):
+    if request.method == 'GET':
+        product_item_id = request.GET.get('product_item_id')
+        cursor  = connection.cursor()
+        cursor.callproc('product.get_attribute_value_by_product_item_id', [product_item_id ])
+        result =  [dict(zip([column[0] for column in cursor.description], row))
+                for row in cursor.fetchall()]
+        return JsonResponse(result, safe=False)
+
+

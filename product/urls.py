@@ -41,6 +41,8 @@ urlpatterns = [
 
    path('product-attribute/', attribute_views.ProductAttributeValueView.as_view(), name='productAttributeValue'),
    path('get-product-attribute/', attribute_views.GetProductAttributeValueView.as_view(), name='getProductAttributeValue'),
+   path('get-item-attribute-value/', attribute_views.get_attribute_value_with_item_id, name='getAttributeValue'),
+
 
 
    path('upload-image/', images_views.AddImages.as_view(), name  =  'addImage' ),
