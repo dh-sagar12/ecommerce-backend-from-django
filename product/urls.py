@@ -47,6 +47,12 @@ urlpatterns = [
 
    path('upload-image/', images_views.AddImages.as_view(), name  =  'addImage' ),
 
-   path('get-brands/', views.GetBrandsView.as_view(), name= 'GetBrands')
+   path('get-brands/', views.GetBrandsView.as_view(), name= 'GetBrands'),
+
+
+   # functional urls 
+   # /api/get-popular-items/
+   path('get-popular-items/', product_inventory_view.PopularProductItems.as_view(), name= 'getPopularItems')
+
 
 ]

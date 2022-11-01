@@ -9,6 +9,8 @@ from rest_framework.permissions import IsAuthenticated
 from product.models.attributes import Attribute, CategoryAttribute, ProductAttributeValues
 from django.db import connection
 from django.http import JsonResponse
+from rest_framework.pagination import PageNumberPagination
+from rest_framework.generics import ListAPIView
 
 
 class AttributeView(APIView):
@@ -39,11 +41,16 @@ class AttributeView(APIView):
             return Response({"msg": 'Attribute has been updated sucessfully!!'})
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
+
+
 class GetAttributeView(APIView):
+    pagination_class = PageNumberPagination
     def get(self, request):
         items = Attribute.objects.filter(is_active =  True)
         serializer = AttributeSerializer(items, many=True)
         return Response(serializer.data, status= status.HTTP_200_OK)
+
+
 
     
 
@@ -147,5 +154,13 @@ def get_attribute_value_with_item_id(request):
         result =  [dict(zip([column[0] for column in cursor.description], row))
                 for row in cursor.fetchall()]
         return JsonResponse(result, safe=False)
+    else:
+        result  =  {
+            "error": status.HTTP_400_BAD_REQUEST,
+            "msg": 'Method Not Allowed'
+        }
+        return JsonResponse(result, safe=False)
+
+        
 
 

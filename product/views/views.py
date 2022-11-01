@@ -9,27 +9,37 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
+from rest_framework.generics import ListAPIView
 
 
 
-class GetFullProductView(APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated]
-    def get(self, request):
-        product = Product.objects.all().order_by('id')
-        serializer =  ProductSerializerForGetMethod(product,  many = True )
-        return Response(serializer.data)
+# class GetFullProductView(APIView):
+#     # authentication_classes = [JWTAuthentication]
+#     # permission_classes = [IsAuthenticated]
+#     def get(self, request):
+#         product = Product.objects.all().order_by('id')
+#         serializer =  ProductSerializerForGetMethod(product,  many = True )
+#         return Response(serializer.data)
+
+class GetFullProductView(ListAPIView):
+    queryset = Product.objects.all().order_by('id')
+    serializer_class = ProductSerializerForGetMethod
 
 
 
 # to view all the product only with one extra item i.e. one images 
 # it is joing product table with image table but not include product_inventory table and attribute table
-class GetOnlyProductView(APIView):
-    def get(self, request):
-        product =  Product.objects.all()
-        serializer  = ProductOnlySerializer(product, many= True)
-        return Response(serializer.data)
+# class GetOnlyProductView(APIView):
+#     def get(self, request):
+#         product =  Product.objects.all()
+#         serializer  = ProductOnlySerializer(product, many= True)
+#         return Response(serializer.data)
         
+
+class GetOnlyProductView(ListAPIView):
+    queryset = Product.objects.all().order_by('id')
+    serializer_class =  ProductOnlySerializer
+
 
 # get only product not their dependencies data 
 class GetOneSingleProductView(APIView):

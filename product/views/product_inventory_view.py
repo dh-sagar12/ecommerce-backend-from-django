@@ -1,3 +1,4 @@
+from datetime import date
 from email.mime import image
 from functools import partial
 import json
@@ -12,10 +13,10 @@ from rest_framework.permissions import IsAuthenticated
 from django.db import transaction
 from rest_framework.decorators import api_view
 from django.db.models import Prefetch
-
+from django.db import connection
+from django.http import JsonResponse
 from product.serializers.ProductInventorySerializer import ProductInventorySerializer, ProductInventorySerializerForGetMethod
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
-
 
  
 # add product item + images and attributes in together 
@@ -88,3 +89,33 @@ class UpdateDeleteProductInventory(APIView):
             serializer.save()
             return Response({"status": status.HTTP_200_OK, "msg": 'Product Inventory has been updated sucessfully!!'})
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+
+
+
+@api_view
+
+def popular_product_items(request):
+    if request.method == 'POST':
+        to_date = request.POST.get('to')
+        cursor  = connection.cursor()
+        cursor.callproc('product.get_popular_product_item', [to_date])
+        result =  [dict(zip([column[0] for column in cursor.description], row))
+                for row in cursor.fetchall()]
+        return JsonResponse(result, safe=False)
+    else:
+        result  =  {
+            "error": status.HTTP_400_BAD_REQUEST,
+            "msg": 'Method Not Allowed'
+        }
+        return JsonResponse(result, safe=False)
+
+
+class PopularProductItems(APIView):
+    
+    def post(self, request):
+        to_date = date.today() or request.data['to']
+        cursor  = connection.cursor()
+        cursor.callproc('product.get_popular_product_item', [to_date])
+        result =  [dict(zip([column[0] for column in cursor.description], row))
+                for row in cursor.fetchall()]
+        return JsonResponse(result, safe=False)
