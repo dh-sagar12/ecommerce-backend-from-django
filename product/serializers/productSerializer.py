@@ -41,7 +41,7 @@ class ProductSerializerForGetMethod(ProductSerializer):
 # to view only one product and images not product item and their atrribute 
 # product with image (primiliary get post stil not required so let's postpond it forsome time )
 class ProductOnlySerializer(serializers.ModelSerializer):
-    image =  ImageSerializer(read_only=True, many=True)
+    images =  ImageSerializer(read_only=True, many=True)
     class Meta:
         model =  Product
         fields= '__all__'

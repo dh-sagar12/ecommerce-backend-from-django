@@ -119,3 +119,15 @@ class PopularProductItems(APIView):
         result =  [dict(zip([column[0] for column in cursor.description], row))
                 for row in cursor.fetchall()]
         return JsonResponse(result, safe=False)
+
+
+class CategoryWisePopularItems(APIView):
+
+    def get(self, request):
+        
+        to_date = date.today() or request.data['to']
+        cursor  = connection.cursor()
+        cursor.callproc('product.category_wise_popular_item', [to_date])
+        result =  [dict(zip([column[0] for column in cursor.description], row))
+                for row in cursor.fetchall()]
+        return JsonResponse(result, safe=False)

@@ -40,6 +40,8 @@ class GetOnlyProductView(ListAPIView):
     queryset = Product.objects.all().order_by('id')
     serializer_class =  ProductOnlySerializer
 
+    
+
 
 # get only product not their dependencies data 
 class GetOneSingleProductView(APIView):

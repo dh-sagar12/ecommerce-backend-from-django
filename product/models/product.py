@@ -5,6 +5,10 @@ from django.template.defaultfilters import slugify
 from product.models.brands import Brands
 
 from product.models.category import Category, SubCategory
+from django.contrib.postgres.fields import ArrayField
+
+
+
 
 # Create your models here.
 
@@ -20,7 +24,7 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True, db_column='is_active')
     created_on = models.DateTimeField(auto_now_add=True, db_column='created_on') 
     updated_on = models.DateTimeField(auto_now=True, db_column='updated_on') 
-
+    price_option  = ArrayField(models.TextField(db_column = 'price_option'))
     
     def __str__(self):
         return str(self.product_name)

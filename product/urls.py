@@ -52,7 +52,8 @@ urlpatterns = [
 
    # functional urls 
    # /api/get-popular-items/
-   path('get-popular-items/', product_inventory_view.PopularProductItems.as_view(), name= 'getPopularItems')
+   path('get-popular-items/', product_inventory_view.PopularProductItems.as_view(), name= 'getPopularItems'),
+   path('categorywise-popular-items/', product_inventory_view.CategoryWisePopularItems.as_view(), name= 'categoryWisePopularItems')
 
 
 ]
