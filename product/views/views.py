@@ -9,8 +9,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.authentication import JWTAuthentication
-from rest_framework.generics import ListAPIView
-
+from rest_framework.generics import ListAPIView  
 
 
 # class GetFullProductView(APIView):
@@ -22,7 +21,7 @@ from rest_framework.generics import ListAPIView
 #         return Response(serializer.data)
 
 class GetFullProductView(ListAPIView):
-    queryset = Product.objects.all().order_by('id')
+    queryset = Product.objects.all().order_by('-id')
     serializer_class = ProductSerializerForGetMethod
 
 
@@ -39,7 +38,7 @@ class GetFullProductView(ListAPIView):
 class GetOnlyProductView(ListAPIView):
     queryset = Product.objects.all().order_by('id')
     serializer_class =  ProductOnlySerializer
-
+    filterset_fields = ['category_id']
     
 
 
