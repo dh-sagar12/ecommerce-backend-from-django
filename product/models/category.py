@@ -7,11 +7,16 @@ from django.template.defaultfilters import slugify
 
 # Create your models here.
 
+def upload_to(instance, filename):
+    return 'Categories/{filename}'.format(filename=filename)
+
 class Category(models.Model):
     id = models.AutoField(primary_key=True, db_column='id')
     slug = models.SlugField(db_column='slug', unique=True)
     category_name= models.CharField(max_length=150, db_column='category_name', null=False)
     is_active = models.BooleanField(default=True, db_column='is_active')
+    thumbnail_img =  models.ImageField(upload_to=upload_to, db_column='thumbnail_img', null=True)
+    description = models.CharField(max_length=200, db_column='description', null=True )
     created_on = models.DateTimeField(auto_now_add=True, db_column='created_on') 
 
     

@@ -17,5 +17,5 @@ class CategorySerializer(serializers.ModelSerializer):
     sub_categories = SubCategorySerializer(many= True, read_only =  True)
     class Meta:
         model = Category
-        fields = ['id', 'category_name', 'slug',  'is_active', 'sub_categories', "created_on"]
+        fields = ['id', 'category_name', 'slug',  'is_active', 'thumbnail_img' , 'description', 'sub_categories', "created_on"]
         read_only_fields = ['id', 'slug', 'sub_categories', 'created_on']
