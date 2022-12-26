@@ -37,6 +37,7 @@ class UserCartView(APIView):
 
             return Response(res)
             
+            
         else:
             res =  {
                 'status': status.HTTP_500_INTERNAL_SERVER_ERROR,
