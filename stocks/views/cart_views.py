@@ -62,3 +62,31 @@ class UserCartView(APIView):
 
             res  =  {'status':status.HTTP_200_OK, 'results':row }
             return JsonResponse(res, safe=False)
+
+    def put(self, request, format=None):
+        id = request.data.get('id')
+        try:
+            cart_instance = CartModel.objects.get(id=id)
+        except Exception as e:
+            res = {'status': status.HTTP_404_NOT_FOUND, 'msg': f'{e}'}
+            return Response(res, status=status.HTTP_404_NOT_FOUND)
+        serializer = UserCartSerializer(cart_instance, data= request.data, partial= True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({"status": status.HTTP_200_OK,  "msg": 'Cart has been updated sucessfully!!'})
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)    
+    
+    def delete(self, request):
+        id = request.data.get('id')
+        print(id)
+        try:
+            cart_instance = CartModel.objects.get(id=id)
+        except Exception as e:
+            res = {'error': f'{e}', "cart_id": id}
+            return Response(res, status= status.HTTP_404_NOT_FOUND)
+        try:
+            cart_instance.delete()
+            return Response({'msg': f'Cart has been deleted successfully!!', 'status': status.HTTP_200_OK}, status=status.HTTP_200_OK)
+        except Exception as e:
+            res = {'error': f'{e}'}
+            return Response(res, status= status.HTTP_500_INTERNAL_SERVER_ERROR)
