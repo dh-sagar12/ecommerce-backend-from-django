@@ -23,6 +23,8 @@ from rest_framework.generics import ListAPIView
 class GetFullProductView(ListAPIView):
     queryset = Product.objects.all().order_by('-id')
     serializer_class = ProductSerializerForGetMethod
+    filterset_fields = ['slug']
+
 
 
 
