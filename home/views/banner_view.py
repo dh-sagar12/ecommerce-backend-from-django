@@ -38,8 +38,7 @@ class GetAllBannerImagesView(APIView):
 
     def get(self, request):
         active_only  =  request.GET['active_only']
-        print('data is  ', active_only)
-        if active_only == 'false':
+        if active_only == 'false' or active_only is None:
             banners  =  BannerPicture.objects.all().order_by('-is_active')
         else:
             banners =  BannerPicture.objects.filter(is_active=  True)

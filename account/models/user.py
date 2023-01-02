@@ -1,6 +1,7 @@
 
 from django.db import models
 from django.contrib.auth.models import BaseUserManager, AbstractBaseUser
+from home.models.CountryModel import CountryModel
 
 
 class MyUserManager(BaseUserManager):
@@ -43,6 +44,17 @@ class MyUserManager(BaseUserManager):
 
 
 
+
+
+
+class GenderModel(models.Model):
+    id  =  models.BigAutoField(primary_key=True, db_column='id')
+    gender_name  =  models.CharField(max_length=50, db_column='gender_name', null=False, blank=False)
+
+    class Meta:
+        db_table =   'core"."genders'
+    
+
 class User(AbstractBaseUser):
     id = models.AutoField(primary_key=True, db_column='id')
     email = models.EmailField(
@@ -53,15 +65,17 @@ class User(AbstractBaseUser):
     )
     password =  models.TextField(null=False, db_column='password')
     first_name = models.CharField(max_length=20, db_column='first_name')
-    middle_name = models.CharField(max_length=20, null=True, db_column='middle_name')
+    middle_name = models.CharField(max_length=20, null=True, db_column='middle_name', blank=True)
     last_name =models.CharField(max_length=20, db_column='last_name')
-    contact = models.PositiveIntegerField(db_column='contact')
+    gender_id  = models.ForeignKey(GenderModel, on_delete=models.DO_NOTHING, null=False, db_column= 'gender_id', to_field='id')
+    country_id  =  models.ForeignKey(CountryModel, on_delete=models.DO_NOTHING, null=False, db_column='country_id', to_field='id')
+    contact = models.CharField(max_length=20,  db_column='contact')
     dob = models.DateField(db_column='dob')
-    is_active = models.BooleanField(default=False, db_column='is_active')
-    is_admin = models.BooleanField(default=False, db_column = 'is_admin')
-    is_customer = models.BooleanField(db_column='is_customer')
-    is_vendor = models.BooleanField(db_column='is_vendor')
-    is_verified =  models.BooleanField(default=False, db_column='is_verified')
+    is_active = models.BooleanField(default=False, db_column='is_active', null= False)
+    is_admin = models.BooleanField(default=False, db_column = 'is_admin', null=False)
+    is_customer = models.BooleanField(db_column='is_customer', default=True, null=False)
+    is_vendor = models.BooleanField(db_column='is_vendor', default=False, null=False)
+    is_verified =  models.BooleanField(default=False, db_column='is_verified',  null=False)
     created_on = models.DateTimeField(auto_now_add= True, db_column='created_on')
     updated_on  =  models.DateTimeField(auto_now=True, db_column='updated_on')
     last_login = models.DateTimeField(db_column='last_login')
@@ -92,3 +106,4 @@ class User(AbstractBaseUser):
 
     class Meta:
         db_table ='auth"."users'
+

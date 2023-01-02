@@ -1,7 +1,9 @@
+from django.http import JsonResponse
 from django.shortcuts import render
 from rest_framework.views import APIView
+from account.models.user import GenderModel
 from account.models.user import User
-from account.serializers.AuthenticationSerializers import UserLoginSerializer, UserSerializer
+from account.serializers.AuthenticationSerializers import GetGenderSerializer, UserLoginSerializer, UserSerializer
 from django.contrib.auth import authenticate
 from rest_framework.response import Response
 from rest_framework import status
@@ -18,6 +20,36 @@ def get_tokens_for_user(user):
       'refresh': str(refresh),
       'access': str(refresh.access_token),
   }
+
+
+
+class UserCreationView(APIView):
+  
+  def post(self, request, format = None):
+
+    serializer  =  UserSerializer(data =  request.data)
+    if serializer.is_valid():
+      try:
+        serializer.save()
+        res =  {
+          'status': status.HTTP_200_OK, 'msg': 'User registration succeed!!!'
+        }
+        return Response(res, status=status.HTTP_200_OK)
+
+      except Exception as e:
+        print('exception', e)
+        res = {
+          'error': f'{e}', 
+          'status': status.HTTP_400_BAD_REQUEST
+        }
+        return Response(res, status=status.HTTP_400_BAD_REQUEST)
+    else:
+      res  ={
+        'status': status.HTTP_400_BAD_REQUEST,
+        'errors': serializer.errors
+      }
+      return Response(res, status=status.HTTP_400_BAD_REQUEST)
+
 
 
 # Create your views here.
@@ -45,3 +77,8 @@ class GetUserData(APIView):
     serializer =  UserSerializer(request.user )
     return Response({'status': status.HTTP_200_OK, 'data':serializer.data}, status=status.HTTP_200_OK)    
 
+
+
+class GetGenderData(ListAPIView):
+    queryset = GenderModel.objects.all().order_by('id')
+    serializer_class = GetGenderSerializer
