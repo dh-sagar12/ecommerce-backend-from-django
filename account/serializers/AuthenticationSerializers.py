@@ -13,6 +13,7 @@ class UserLoginSerializer(serializers.ModelSerializer):
     model = User
     fields = ['email', 'password']
   
+  
 
 class UserSerializer(serializers.ModelSerializer):
   password  =  serializers.CharField(max_length = 100, write_only = True)

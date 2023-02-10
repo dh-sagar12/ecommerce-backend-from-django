@@ -71,7 +71,7 @@ class User(AbstractBaseUser):
     country_id  =  models.ForeignKey(CountryModel, on_delete=models.DO_NOTHING, null=False, db_column='country_id', to_field='id')
     contact = models.CharField(max_length=20,  db_column='contact')
     dob = models.DateField(db_column='dob')
-    is_active = models.BooleanField(default=False, db_column='is_active', null= False)
+    is_active = models.BooleanField(default=True, db_column='is_active', null= False)
     is_admin = models.BooleanField(default=False, db_column = 'is_admin', null=False)
     is_customer = models.BooleanField(db_column='is_customer', default=True, null=False)
     is_vendor = models.BooleanField(db_column='is_vendor', default=False, null=False)
@@ -107,3 +107,19 @@ class User(AbstractBaseUser):
     class Meta:
         db_table ='auth"."users'
 
+
+
+
+class ShippingDetailMOdel(models.Model):
+    id  =  models.BigAutoField(primary_key=True, db_column='id')
+    user_id  =  models.ForeignKey(User, on_delete=models.DO_NOTHING, db_column='user_id')
+    full_name  = models.CharField(max_length=200, db_column='full_name', null=False, blank=False)
+    address =  models.CharField(max_length=500, db_column='address', null=False, blank=False)
+    landmark =  models.CharField(max_length=400, db_column='landmark')
+    postal_code =  models.IntegerField(db_column='postal_code')
+    city =  models.CharField(max_length=100, db_column='city')
+    contact_number   =  models.CharField(max_length=15, db_column='contact_number', null=False)
+
+
+    class Meta:
+        db_table  =  'auth"."shipping_details'

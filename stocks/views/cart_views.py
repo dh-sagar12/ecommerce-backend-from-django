@@ -53,9 +53,9 @@ class UserCartView(APIView):
 
         with connection.cursor() as cursor:
             if id == 0:
-                cursor.execute("SELECT * FROM inventory.cart_view WHERE user_id  =%s AND status AND  order_id IS NULL", [request.user.id])
+                cursor.execute("SELECT * FROM inventory.cart_view WHERE user_id  =%s AND status", [request.user.id])
             else:
-                cursor.execute("SELECT * FROM inventory.cart_view WHERE  id= %s  AND  user_id  =%s AND status AND  order_id IS NULL", [id, request.user.id])
+                cursor.execute("SELECT * FROM inventory.cart_view WHERE  id= %s  AND  user_id  =%s AND status", [id, request.user.id])
             
             row  =  [dict(zip([column[0] for column in cursor.description], row))
                     for row in cursor.fetchall()]
@@ -79,7 +79,6 @@ class UserCartView(APIView):
     
     def delete(self, request):
         id = request.data.get('id')
-        print(id)
         try:
             cart_instance = CartModel.objects.get(id=id)
         except Exception as e:
