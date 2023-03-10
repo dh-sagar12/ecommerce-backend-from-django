@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
 from  rest_framework import serializers
+from stocks.models.CartModels import CartModel
 from stocks.models.OrderModels import OrdersModel
 from django.db import transaction
 
@@ -54,8 +55,8 @@ class CartOderSerializer(ModelSerializer):
         fields =  ['order', 'delivery_address']
 
 
-    def get_ordered_by(self, obj):
-        return self.context['request'].user
+    def get_ordered_by(self):
+        return self.context['request'].user.id
 
     @transaction.atomic
     def create(self, validated_data):
@@ -64,7 +65,7 @@ class CartOderSerializer(ModelSerializer):
         
         
         for item in order:
-            # item['ordered_by'] =  1
+            item['ordered_by'] =  self.get_ordered_by()
             order_serializer  =  ProductOrderSerializer(data=item)
             order_serializer.is_valid(raise_exception= True)
             order_instance  =  order_serializer.save()
@@ -72,6 +73,8 @@ class CartOderSerializer(ModelSerializer):
             delivery_address_serialzer  =  DeliveryAdressSerializer(data=delivery_address)
             delivery_address_serialzer.is_valid(raise_exception=True)
             delivery_address_serialzer.save()
+            CartModel.objects.filter(id= item.get('cart_id')).update(status  =  False)
+            
         return order_instance
 
 

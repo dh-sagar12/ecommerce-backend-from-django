@@ -21,8 +21,8 @@ from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
  
 # add product item + images and attributes in together 
 class AddNewProductInventory(APIView):
-    # authentication_classes = [JWTAuthentication]
-    # permission_classes = [IsAuthenticated, AdminCanAdd]
+    authentication_classes = [JWTAuthentication]
+    permission_classes = [IsAuthenticated, AdminCanAdd]
     parser_classes = [MultiPartParser, FormParser, JSONParser ]
 
     def post(self, request, format= None):
