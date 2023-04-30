@@ -39,3 +39,18 @@ class DeliveryAdressModel(models.Model):
 
     class Meta:
         db_table  =  'inventory"."delivery_addresses'
+
+
+    
+
+class OrdersStatusModel(models.Model):
+    id =  models.BigAutoField(primary_key= True, db_column='id')
+    order_id = models.ForeignKey(OrdersModel, on_delete=models.DO_NOTHING, db_column='order_id')
+    order_status = models.CharField(max_length=20, blank=False, null=False)
+    order_remarks = models.CharField(max_length=200, blank=False, null=False, db_column='order_remarks')
+    created_by = models.ForeignKey(User, on_delete=models.DO_NOTHING, db_column='created_by')
+    created_on = models.DateTimeField(auto_now=True, db_column='created_on')
+    
+
+    class Meta:
+        db_table =  'inventory"."orders_status'

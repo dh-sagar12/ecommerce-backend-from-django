@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework_simplejwt.authentication import JWTAuthentication
 from rest_framework.permissions import IsAuthenticated
 from product.custompermissions import AdminCanAdd
-from stocks.serializers.OrderSerializers import CartOderSerializer, SingleProductOrderSerializer
+from stocks.serializers.OrderSerializers import CartOderSerializer, OrdersStatusSerializer, SingleProductOrderSerializer
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.generics import ListAPIView
@@ -77,3 +77,27 @@ class ShowAllOrdersView(APIView):
 
             res  =  {'status':status.HTTP_200_OK, 'results':row }
             return JsonResponse(res, safe=False)
+        
+
+
+
+class OrdersStatusView(APIView):
+    authentication_classes  = [JWTAuthentication]
+    permission_classes  =  [IsAuthenticated, AdminCanAdd]
+
+
+    def post(self, request):
+        serializer  =  OrdersStatusSerializer(data=  request.data, context = {'request': request})
+        if serializer.is_valid():
+            res = {'status': status.HTTP_200_OK, 'msg': 'Status Updated Successfully!!'}
+            return Response(res, status= status.HTTP_200_OK)
+        
+        else:
+
+            res =  {
+            'errors': serializer.errors
+            }
+            return Response(res, status= status.HTTP_400_BAD_REQUEST)
+
+ 
+

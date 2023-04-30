@@ -1,7 +1,7 @@
 from rest_framework.serializers import ModelSerializer
 from  rest_framework import serializers
 from stocks.models.CartModels import CartModel
-from stocks.models.OrderModels import OrdersModel
+from stocks.models.OrderModels import OrdersModel, OrdersStatusModel
 from django.db import transaction
 
 from stocks.serializers.DeliveryAddressSerializer import DeliveryAdressSerializer
@@ -78,7 +78,10 @@ class CartOderSerializer(ModelSerializer):
         return order_instance
 
 
-    
+class OrdersStatusSerializer(ModelSerializer):
 
 
-   
+    class Mets:
+        model  =  OrdersStatusModel
+        feilds  =  ["id," "order_id", "order_status", "order_remarks", "created_by", "created_on"]
+        read_only_feilds = ['id', 'created_on']
